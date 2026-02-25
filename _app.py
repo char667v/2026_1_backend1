@@ -31,8 +31,6 @@ def show_items():
 
 
 
-
-
 ##############################
 """
 @app.get("/items")
@@ -107,13 +105,6 @@ def get_user_by_id(user_pk):
         # In other words, it always runs
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
-
-
-
-
-
-
-
 
 
 

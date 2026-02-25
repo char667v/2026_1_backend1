@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,28 +10,24 @@
         Signup
     </title>
 </head>
-<body>
 
+<body>
     <h1>
-        {{ x.USER_USERNAME_MIN }}
+        {{ x.user_username_MIN }}
     </h1>
     <h1>
-         {{ x.USER_USERNAME_MAX }}
+        {{ x.user_username_MAX }}
     </h1>
 
     <form>
         <label for="">Username</label>
-        <input  name="user_username" type="text" 
-                mix-post="/check-username"
-                mix-input
-                mix-delay="1000"                
-                >
-        <span></span>
+        <input name="user_username" type="text" mix-post="/check-username" mix-input mix-delay="1000"
+            mix-validate="^.{ {{ x.user_username_MIN }},{{ x.user_username_MAX }} }$">
+        <span></span> <!-- der var xxxxx i span kun for at se det i browser -->
     </form>
-
-
 
     <script src="/static/mixhtml.js"></script>
 
 </body>
+
 </html>

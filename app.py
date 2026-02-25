@@ -10,7 +10,7 @@ app = Flask(__name__)
 ##############################
 @app.post("/signup")
 def signup():
-    try:
+    try: #start with a validation
         user_first_name = x.validate_user_first_name()
         user_last_name = x.validate_user_last_name()
         user_username = x.validate_user_username()
@@ -42,14 +42,13 @@ def signup():
                 return "user_username already exists", 400
         """
 
-
-
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
 
 ##############################
+# creating a form
 @app.get("/signup")
 def show_signup():
     try:
@@ -73,14 +72,12 @@ def check_username():
                     Username available
                 </browser>
             """
-        
         return f"""
             <browser mix-update="span">
                 Username taken
             </browser>
         """        
-
-
+    
     except Exception as ex:
         # print(ex, flush = True)
         ic(ex)
@@ -94,7 +91,6 @@ def check_username():
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()  
-
 
 
 

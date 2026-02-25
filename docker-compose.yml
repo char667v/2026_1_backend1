@@ -20,7 +20,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     ports:
-      - 3306:3306
+      - 3307:3306 #Har været nødsaget til at ændre port 3306 til 3307!!
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -35,6 +35,3 @@ services:
 
 volumes:
   mariadb_data:
-
-
-
