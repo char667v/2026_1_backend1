@@ -1,6 +1,6 @@
 from flask import request
 import mysql.connector
-import re
+import re #Regular expressions also called Regex
 
 ##############################
 def db():
@@ -34,11 +34,12 @@ def db():
 ##############################
 USER_FIRST_NAME_MIN = 2
 USER_FIRST_NAME_MAX = 20
-USER_FIRST_NAME_REGEX = f"^.{{{USER_FIRST_NAME_MIN},{USER_FIRST_NAME_MAX}}}$"
+# ^.{2,20}$ <- venstre side er som at skrive det på højre side -> f"^.{{{USER_FIRST_NAME_MIN},{USER_FIRST_NAME_MAX}}}$"
+USER_FIRST_NAME_MAX_REGEX = f"^.{{{USER_FIRST_NAME_MIN},{USER_FIRST_NAME_MAX}}}$"
 def validate_user_first_name():
     user_first_name = request.form.get("user_first_name", "").strip()  
-    if not re.match(USER_FIRST_NAME_REGEX, user_first_name):
-        raise Exception(f"--error-- user_first_name")    
+    if not re.match(USER_FIRST_NAME_REGEX, user_first_name): 
+        raise Exception(f"--error-- user_first_name")  
 
     return user_first_name
 
@@ -60,10 +61,9 @@ USER_USERNAME_MAX = 20
 USER_USERNAME_REGEX = f"^.{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
 def validate_user_username():
     user_username = request.form.get("user_username", "").strip()
-    if not re.match(USER_USERNAME_REGEX, user_username):
-        raise Exception("--error-- user_username")
+    if not re.match(USER_USERNAME_REGEX, user_username):    #if the rule does not match then
+        raise Exception("--error-- user_username")          #there is a error in the first name and app.py fix it - line 88 in app.py
     return user_username
-
 
 
 
