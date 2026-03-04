@@ -1,13 +1,18 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 import x
 import uuid
 import time
+
+from flask_session import Session
 
 # 2i see the" bug icecreme is a library
 from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True) # the dash Santi created it
 
 app = Flask(__name__)
+
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 ic(int(time.time()))
 
@@ -104,7 +109,7 @@ def create_user():
         user_username = x.validate_user_username()
         user_first_name = x.validate_user_first_name()
         user_pk = uuid.uuid4().hex
-        user_create_at = int(time. Time()) # epoch generation
+        user_create_at = int(time.time()) # epoch generation / time.time() = giver decimaltal
         db, cursor = x.db()
         q = "INSERT INTO users VALUES(%s, %s, %s, %s)"
         cursor.execute(q, (user_pk, user_username, user_first_name, user_create_at))
@@ -133,6 +138,31 @@ def create_user():
         # Worst case, something unexpected
         return f"""<browser mix-update="span">System under maintenance</browser>""", 500 # worse case scenario 500 cus it is something we did
 
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()  
+
+
+##############################
+# render the login page
+@app.get("/login")
+def login():
+    return render_template("page_login.html")
+
+##############################
+@app.post("/login")
+def user_login():
+    try:
+        # TODO: validate
+        # TODO: check if email and password exist in the db
+        user = {
+            "name":"Santiago"
+        }
+        session["user"] = user
+        return "you are logged in"
+    except Exception as ex:
+         ic(ex)
+         return str(ex)
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()  
