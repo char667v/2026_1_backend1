@@ -1,37 +1,46 @@
 services:
-  web:
-    build:
+  web: # create a container for my backend (the boutique)
+    build: # Use my dockerfile recipe to build the boutique
       context: .
       dockerfile: Dockerfile
-    container_name: 2026_1_backend_flask
-    depends_on:
+    container_name: 2026_1_backend_flask # The name of the boutique
+    depends_on: #start the warehouse (DB) before the boutique starts
       - mariadb
     ports:
       - 80:80 # 0 - 1024 reserved. Use any port from 1025 to 65535
-    volumes:
+      # Customers (browser) enter via Mac port 81, and it forwards to container port 80 where Flask listens.
+    volumes: # Keep the boutique’s shelves updated: your local code folder is shared into the container, so edits show up inside Docker.
       - .:/app
 
+# DATABASE / stockroom
   mariadb:
-    image: mariadb:10.6.20
-    container_name: 2026_1_backend_mariadb
-    environment:
+    image: mariadb:10.6.20 # The standard warehouse setup you rent (the ready-built interior)
+    container_name: 2026_1_backend_mariadb # name of the stock room/warehouse
+    environment: # The standard warehouse setup you rent (the ready-built interior)
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: 2026_1_backend
-    volumes:
+    volumes: #The permanent shelves/storage where the goods stay
       - mariadb_data:/var/lib/mysql
-    ports:
-      - 3307:3306 #Har været nødsaget til at ændre port 3306 til 3307!!
+    ports: # The permanent shelves/storage where the goods stay
+      - 3307:3306 # Har været nødsaget til at ændre port 3306 til 3307!!
 
+# Tool to manage what’s inside the stock room
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: 2026_1_backend_phpmyadmin
-    depends_on:
+    image: phpmyadmin/phpmyadmin # The ready-made “control room setup” you rent (prebuilt tool)
+    container_name: 2026_1_backend_phpmyadmin  # name of the warehouse control tools
+    depends_on: # Open the warehouse first, then open the control room
       - mariadb
-    environment:
+    environment: # The settings/credentials the control room uses to find the warehouse (DB host, etc.)
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: password
-    ports:
+    ports: # The settings/credentials the control room uses to find the warehouse (DB host, etc.)
       - 8080:80
 
 volumes:
   mariadb_data:
+
+# Docker      = "Fields" - The environment where everything lives in
+# container   = A room - A separated space for one service
+# Flask       = "Bahne" - The backend that serves customers
+# MariaDB     = The stock room - Where data is stored
+# phpMyAdmin  = The forklift / warehouse control tool - A tool to manage what’s inside the stock room
