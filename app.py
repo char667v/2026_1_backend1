@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, redirect
 import x
 import uuid
 import time
@@ -144,10 +144,15 @@ def create_user():
 
 
 ##############################
-# render the login page
+# page_login.html
 @app.get("/login")
 def login():
-    return render_template("page_login.html")
+    try:
+        return render_template("page_login.html")
+    except Exception as ex:
+         ic(ex)
+         return "ups", 500
+
 
 ##############################
 @app.post("/login")
@@ -166,3 +171,28 @@ def user_login():
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()  
+
+##############################
+#page_profile.html
+@x.no_cache 
+@app.get("/profile")
+def profile():
+    try:
+        user = session.get("user", "")
+        if not user: return redirect("/login")
+        ic(user)
+        return render_template("page_profile.html", user=user)
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    
+
+##############################
+@app.get("/logout")
+def logout():
+    try:
+        session.clear()
+        return redirect("/login")
+    except Exception as ex:
+         ic(ex)
+         return "system under maintenace"
