@@ -1,6 +1,7 @@
-from flask import request
+from flask import request, make_response
 import mysql.connector
 import re #Regular expressions also called Regex
+from functools import wraps
 
 ##############################
 def db():
@@ -16,6 +17,18 @@ def db():
     except Exception as e:
         print(e, flush=True)
         raise Exception("Database under maintenance", 500)
+    
+##############################
+# function - runs only when you call it
+def no_cache(view):
+    @wraps(view)
+    def no_cache_view(*args, **kwargs):
+        response = make_response(view(*args, **kwargs))
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
+    return no_cache_view
 
 ##############################
 # USER_FIRST_NAME_MIN = 2         #Det er med stort da det er en const in python
